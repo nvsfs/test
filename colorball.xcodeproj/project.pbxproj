@@ -426,6 +426,7 @@
 				9AC4416A1B00E87B008EB9C8 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		9AC4416B1B00E87B008EB9C8 /* Build configuration list for PBXNativeTarget "colorballTests" */ = {
 			isa = XCConfigurationList;
@@ -434,6 +435,7 @@
 				9AC4416D1B00E87B008EB9C8 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
