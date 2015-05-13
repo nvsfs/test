@@ -6,11 +6,11 @@
 //  Copyright (c) 2015 Natalia Souza. All rights reserved.
 //
 
-#import "ballNode.h"
+#import "Blocos.h"
 
-@implementation ballNode
+@implementation Blocos
 
--(ballNode*) initWithLinha: (NSUInteger)linha
+-(Blocos*) initWithLinha: (NSUInteger)linha
                  andColuna: (NSUInteger)coluna
                  withColor:(UIColor*)color
                    andSize: (CGSize)size;

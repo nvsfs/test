@@ -16,7 +16,7 @@
 		9AC441561B00E87B008EB9C8 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9AC441551B00E87B008EB9C8 /* Images.xcassets */; };
 		9AC441591B00E87B008EB9C8 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9AC441571B00E87B008EB9C8 /* LaunchScreen.xib */; };
 		9AC441651B00E87B008EB9C8 /* colorballTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 9AC441641B00E87B008EB9C8 /* colorballTests.m */; };
-		9AC7943C1B0286710090579F /* ballNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 9AC7943B1B0286710090579F /* ballNode.m */; };
+		9AC7943C1B0286710090579F /* Blocos.m in Sources */ = {isa = PBXBuildFile; fileRef = 9AC7943B1B0286710090579F /* Blocos.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -46,8 +46,8 @@
 		9AC4415E1B00E87B008EB9C8 /* colorballTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = colorballTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		9AC441631B00E87B008EB9C8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9AC441641B00E87B008EB9C8 /* colorballTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = colorballTests.m; sourceTree = "<group>"; };
-		9AC7943A1B0286710090579F /* ballNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ballNode.h; sourceTree = "<group>"; };
-		9AC7943B1B0286710090579F /* ballNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ballNode.m; sourceTree = "<group>"; };
+		9AC7943A1B0286710090579F /* Blocos.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Blocos.h; sourceTree = "<group>"; };
+		9AC7943B1B0286710090579F /* Blocos.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Blocos.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -91,8 +91,8 @@
 			children = (
 				9AC441471B00E87B008EB9C8 /* AppDelegate.h */,
 				9AC441481B00E87B008EB9C8 /* AppDelegate.m */,
-				9AC7943A1B0286710090579F /* ballNode.h */,
-				9AC7943B1B0286710090579F /* ballNode.m */,
+				9AC7943A1B0286710090579F /* Blocos.h */,
+				9AC7943B1B0286710090579F /* Blocos.m */,
 				9AC4414A1B00E87B008EB9C8 /* GameScene.h */,
 				9AC4414B1B00E87B008EB9C8 /* GameScene.m */,
 				9AC4414D1B00E87B008EB9C8 /* GameScene.sks */,
@@ -237,7 +237,7 @@
 				9AC441491B00E87B008EB9C8 /* AppDelegate.m in Sources */,
 				9AC4414C1B00E87B008EB9C8 /* GameScene.m in Sources */,
 				9AC441461B00E87B008EB9C8 /* main.m in Sources */,
-				9AC7943C1B0286710090579F /* ballNode.m in Sources */,
+				9AC7943C1B0286710090579F /* Blocos.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

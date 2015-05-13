@@ -7,49 +7,52 @@
 //
 
 #import "GameScene.h"
-#import "ballNode.h"
+#import "Blocos.h"
 
 #define colunas 6
 #define linhas 8
 #define minimo_blocos  3
+#define tempoJogo 05.0f
+
+
+typedef enum {
+    
+    STARTING,
+    STOPPED,
+    PLAYING
+    
+} GameState;
+
+
 
 
 @interface GameScene(){
     NSArray *_cores;
+    SKLabelNode *_Labelscore;
+    NSUInteger _score;
+    
+    SKLabelNode *_LabelTempo;
+    
+    GameState _gameState;
+    CFTimeInterval _startTime;
+    
 }
+
 @end
 
 @implementation GameScene
-
-
--(void)Blockfall: (CGSize)size withPosition:(CGPoint)position andColor :(UIColor*)cor{
-    
-    
-    SKSpriteNode *ball = [SKSpriteNode spriteNodeWithColor:cor size:size];
-    
-    ball.physicsBody = [SKPhysicsBody bodyWithRectangleOfSize:CGSizeMake(size.width-2, size.height-2)];
-    
-    ball.position = position;
-    
-    ball.physicsBody.restitution = 0.f;
-    
-    ball.physicsBody.allowsRotation = false;
-    
-    [self addChild:ball];
-    
-    
-}
 
 -(id)initWithSize:(CGSize)size{
     
     if (self = [super initWithSize:size]){
         
+        //background e gravidade
         self.backgroundColor = [SKColor colorWithRed:0.15 green:0.4 blue:0.3 alpha:1.0];
         
         self.physicsWorld.gravity = CGVectorMake(0, -8.f);
         
     
-        
+        //criando o "chao"
         SKSpriteNode *chao = [SKSpriteNode spriteNodeWithColor:[UIColor blackColor] size:CGSizeMake(640, 80)];
         
         chao.physicsBody = [SKPhysicsBody bodyWithRectangleOfSize:chao.size];
@@ -58,8 +61,7 @@
         
         chao.position = CGPointMake(160, 20);
         
-        chao.physicsBody.mass = -1;
-        
+        //add chao a cena
         [self addChild:chao];
         
         
@@ -74,24 +76,44 @@
                 
                 NSUInteger colorIndex = arc4random() % cores.count;
                 
-                ballNode *node = [[ballNode alloc] initWithLinha:linha
+                Blocos *node = [[Blocos alloc] initWithLinha:linha
                                                        andColuna:coluna
                                                        withColor:[cores objectAtIndex:colorIndex]
                                                          andSize:CGSizeMake(dimension, dimension)];
                 
-                // add the block to our scene
+                // add o bloco na cena
                 [self.scene addChild:node];
                 
-                            }
+                
+                //label da pontuacao
+                _Labelscore = [SKLabelNode labelNodeWithFontNamed: @"Arial"];
+                _LabelTempo.text = @"";
+                _Labelscore.fontColor = [UIColor whiteColor ];
+                _Labelscore.fontSize = 14.0f;
+                _Labelscore.position = CGPointMake(30, 10);
+                
+                [self.scene addChild:_Labelscore];
+                
+                
+                //label de tempo
+                _LabelTempo = [SKLabelNode labelNodeWithFontNamed:@"Arial"];
+                _LabelTempo.text = @"";
+                _LabelTempo.fontColor = [UIColor whiteColor];
+                _LabelTempo.fontSize = 14.0f;
+                _LabelTempo.horizontalAlignmentMode = SKLabelHorizontalAlignmentModeRight;
+                _LabelTempo.position = CGPointMake(310, 20);
+
+                
+                //add a cena
+                [self.scene addChild:_LabelTempo];
+                
+                
+            }
         }
         
     }
     
     return self;
-    
-}
--(void)didMoveToView:(SKView *)view {
-    
     
 }
 
@@ -106,10 +128,12 @@
     SKNode *node = [self nodeAtPoint:location];
     
     // if it was a block being touched
-    if([node isKindOfClass:[ballNode class]]) {
-        
+    if([node isKindOfClass:[Blocos class]]) {
+        if (_gameState == STOPPED) {
+            _gameState = STARTING;
+        }
         // cast it so we can access the attributes
-        ballNode *clickedBlock = (ballNode*)node;
+        Blocos *clickedBlock = (Blocos*)node;
         
         
         // recursively retrieve all valid blocks around it
@@ -118,18 +142,25 @@
         // ensure that there are enough connected blocks selected
         if(objectsToRemove.count >= minimo_blocos) {
             
+          
+            
             // iterate through everything we need to delete
-            for(ballNode *deleteNode in objectsToRemove) {
+            for(Blocos *deleteNode in objectsToRemove) {
                 
                 // remove it from the scene
                 [deleteNode removeFromParent];
                 
                 // and decrement the 'row' variable for all blocks that sit above the one being removed
-                for(ballNode *testNode in [self getAllBlocks]) {
+                for(Blocos *testNode in [self getAllBlocks]) {
                     if(deleteNode.coluna == testNode.coluna && (deleteNode.linha < testNode.linha)) {
                         --testNode.linha;
+                        
                     }
                 }
+                
+                ++_score;
+                
+                _Labelscore.text = [NSString stringWithFormat:@ "Score: %d" , _score];
             }
 
             
@@ -140,7 +171,7 @@
             for(int i=0; i<colunas; i++) totallinhas[i] = 0;
             
             // walk through our blocks
-            for(ballNode *node in [self getAllBlocks]) {
+            for(Blocos *node in [self getAllBlocks]) {
                 
                 // get the index of the highest row in each column
                 if(node.linha > totallinhas[node.coluna]) {
@@ -161,7 +192,7 @@
                     // add the block to our scene
                     
                     
-                    ballNode *node = [[ballNode alloc] initWithLinha:totallinhas[coluna] + 1
+                    Blocos *node = [[Blocos alloc] initWithLinha:totallinhas[coluna] + 1
                                                            andColuna:coluna
                                                            withColor:[_cores objectAtIndex:colorIndex]
                                                              andSize:CGSizeMake(dimension, dimension)];
@@ -188,7 +219,7 @@
     for(SKNode *childNode in self.scene.children) {
         
         // see if it's of type 'BlockNode'
-        if([childNode isKindOfClass:[ballNode class]]) {
+        if([childNode isKindOfClass:[Blocos class]]) {
             
             // add it to our tracking array
             [blocks addObject:childNode];
@@ -198,7 +229,7 @@
     return [NSArray arrayWithArray:blocks];
 }
 
-- (BOOL) inRange:(ballNode*)testNode of:(ballNode*)baseNode
+- (BOOL) inRange:(Blocos*)testNode of:(Blocos*)baseNode
 {
     // mesma linha ou coluna
     BOOL isRow = (baseNode.linha == testNode.linha);
@@ -215,13 +246,13 @@
     return ( (isRow && oneOffCol) || (isCol && oneOffRow) ) && sameColor;
 }
 
-- (NSMutableArray*) nodesToRemove:(NSMutableArray*)removedNodes aroundNode:(ballNode*)baseNode
+- (NSMutableArray*) nodesToRemove:(NSMutableArray*)removedNodes aroundNode:(Blocos*)baseNode
 {
     // make sure our base node is being removed
     [removedNodes addObject:baseNode];
     
     // go through all the blocks on the screen
-    for(ballNode *childNode in [self getAllBlocks]) {
+    for(Blocos *childNode in [self getAllBlocks]) {
         
         // if the node being tested is on one of the four sides off our base node
         // and it is the same color, it is in range and valid to be removed
@@ -240,9 +271,46 @@
     return removedNodes;
 }
 
+-(void)gameEnded{
+    
+    // indicate our game state as stopped
+    _gameState = STOPPED;
+    
+    // create a message to let the user know their score
+    NSString *message = [NSString stringWithFormat:@"You scored %d this time", _score];
+    
+    // show the message to the user
+    UIAlertView *av = [[UIAlertView alloc] initWithTitle:@"Game over!"
+                                                 message:message
+                                                delegate:nil
+                                       cancelButtonTitle:@"Ok"
+                                       otherButtonTitles:nil];
+    [av show];
+    
+    // reset the score tracker for the next game
+    _score = 0;
+
+    
+}
 
 
 -(void)update:(CFTimeInterval)currentTime {
+    
+    
+    if (_gameState == STARTING) {
+        _startTime = currentTime;
+        _gameState = PLAYING;
+        
+    }
+    
+    if (_gameState == PLAYING) {
+        int temporestante = ceil(tempoJogo + (_startTime - currentTime));
+        _LabelTempo.text = [NSString stringWithFormat:@"Tempo restante: %d", temporestante];
+        
+        if (temporestante == 0) {
+            [self gameEnded];
+        }
+    }
     // go through all the blocks in our scene
     for(SKNode *node in self.scene.children) {
         

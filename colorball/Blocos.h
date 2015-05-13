@@ -8,12 +8,12 @@
 
 #import <SpriteKit/SpriteKit.h>
 
-@interface ballNode : SKSpriteNode
+@interface Blocos : SKSpriteNode
 
 @property (nonatomic, assign) NSUInteger linha;
 @property (nonatomic, assign) NSUInteger coluna;
 
--(ballNode*) initWithLinha: (NSUInteger)linha
+-(Blocos*) initWithLinha: (NSUInteger)linha
                  andColuna: (NSUInteger)coluna
                  withColor:(UIColor*)color
                    andSize: (CGSize)size;
