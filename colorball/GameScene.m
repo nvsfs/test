@@ -24,8 +24,6 @@ typedef enum {
 } GameState;
 
 
-
-
 @interface GameScene(){
     NSArray *_cores;
     SKLabelNode *_Labelscore;
