@@ -12,7 +12,7 @@
 
 -(Blocos*) initWithLinha: (NSUInteger)linha
                  andColuna: (NSUInteger)coluna
-                 withColor:(UIColor*)color
+                 withColor:(SKColor*)color
                    andSize: (CGSize)size;
 {
     self = [super initWithColor:color size:size];

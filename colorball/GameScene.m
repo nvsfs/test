@@ -11,8 +11,8 @@
 
 #define colunas 6
 #define linhas 8
-#define minimo_blocos  3
-#define tempoJogo 05.0f
+#define minimo_blocos 2
+#define tempoJogo 40.0f
 
 
 typedef enum {
@@ -45,13 +45,13 @@ typedef enum {
     if (self = [super initWithSize:size]){
         
         //background e gravidade
-        self.backgroundColor = [SKColor colorWithRed:0.15 green:0.4 blue:0.3 alpha:1.0];
+        self.backgroundColor = [SKColor colorWithRed:0.31 green:0.35 blue:0.39 alpha:1.0];
         
         self.physicsWorld.gravity = CGVectorMake(0, -8.f);
         
     
         //criando o "chao"
-        SKSpriteNode *chao = [SKSpriteNode spriteNodeWithColor:[UIColor blackColor] size:CGSizeMake(640, 80)];
+        SKSpriteNode *chao = [SKSpriteNode spriteNodeWithColor:[UIColor colorWithRed:0.97 green:0.38 blue:0.38 alpha:1.0] size:CGSizeMake(640, 80)];
         
         chao.physicsBody = [SKPhysicsBody bodyWithRectangleOfSize:chao.size];
         
@@ -70,7 +70,11 @@ typedef enum {
                 CGFloat xposicao = (dimension / 2) + coluna * dimension;
                 CGFloat yposicao = 640 + ( (dimension/2) - linha * dimension );
                 
-                NSArray *cores = @[[UIColor greenColor], [UIColor redColor], [UIColor blueColor], [UIColor yellowColor], [UIColor blackColor]];
+                NSArray *cores = @[[SKColor colorWithRed:0.30 green:0.74 blue:0.83 alpha:1.0], //rosa
+                                   [SKColor colorWithRed:1.00 green:0.46 blue:0.58 alpha:1.0], //magenta
+                                   [SKColor colorWithRed:0.99 green:0.75 blue:0.52 alpha:1.0], //amarelinho
+                                   [SKColor colorWithRed:0.12 green:0.44 blue:0.64 alpha:1.0], //azul
+                                   [SKColor colorWithRed:0.54 green:0.71 blue:0.89 alpha:1.0]]; //cinza
                 
                 NSUInteger colorIndex = arc4random() % cores.count;
                 
@@ -116,25 +120,22 @@ typedef enum {
 }
 
 -(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
-    // get a touch object
+
     UITouch *touch = [touches anyObject];
     
-    // and the touch's location
     CGPoint location = [touch locationInNode:self];
     
-    // see which node was touched based on the location of the touch
     SKNode *node = [self nodeAtPoint:location];
     
-    // if it was a block being touched
+    // se um bloco foi tocado
     if([node isKindOfClass:[Blocos class]]) {
         if (_gameState == STOPPED) {
             _gameState = STARTING;
         }
-        // cast it so we can access the attributes
         Blocos *clickedBlock = (Blocos*)node;
         
         
-        // recursively retrieve all valid blocks around it
+        // Procurar os blocos ao validos (mesmo )
         NSMutableArray *objectsToRemove = [self nodesToRemove:[NSMutableArray array] aroundNode:clickedBlock];
 
         // ensure that there are enough connected blocks selected
@@ -184,7 +185,12 @@ typedef enum {
                     CGFloat dimension = self.scene.size.width / colunas;
             
                     
-                     _cores = @[[UIColor greenColor], [UIColor redColor], [UIColor blueColor], [UIColor yellowColor], [UIColor blackColor]];
+                    _cores = @[[SKColor colorWithRed:0.30 green:0.74 blue:0.83 alpha:1.0], //rosa
+                                                [SKColor colorWithRed:1.00 green:0.46 blue:0.58 alpha:1.0], //magenta
+                                                [SKColor colorWithRed:0.99 green:0.75 blue:0.52 alpha:1.0], //amarelinho
+                                                [SKColor colorWithRed:0.12 green:0.44 blue:0.64 alpha:1.0], //azul
+                                                [SKColor colorWithRed:0.54 green:0.71 blue:0.89 alpha:1.0]]; //cinza
+
                     
                     NSUInteger colorIndex = arc4random() % _cores.count;
                     // add the block to our scene
@@ -275,10 +281,10 @@ typedef enum {
     _gameState = STOPPED;
     
     // create a message to let the user know their score
-    NSString *message = [NSString stringWithFormat:@"You scored %d this time", _score];
+    NSString *message = [NSString stringWithFormat:@"Aeee! Você fez %d pontos", _score];
     
     // show the message to the user
-    UIAlertView *av = [[UIAlertView alloc] initWithTitle:@"Game over!"
+    UIAlertView *av = [[UIAlertView alloc] initWithTitle:@"Boom!"
                                                  message:message
                                                 delegate:nil
                                        cancelButtonTitle:@"Ok"
