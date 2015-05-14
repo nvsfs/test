@@ -12,7 +12,7 @@
 #define colunas 6
 #define linhas 8
 #define minimo_blocos 2
-#define tempoJogo 30.0f
+#define tempoJogo 05.0f
 
 
 typedef enum {
@@ -70,11 +70,11 @@ typedef enum {
                 CGFloat xposicao = (dimension / 2) + coluna * dimension;
                 CGFloat yposicao = 640 + ( (dimension/2) - linha * dimension );
                 
-                NSArray *cores = @[[SKColor colorWithRed:0.30 green:0.74 blue:0.83 alpha:1.0], //rosa
-                                   [SKColor colorWithRed:1.00 green:0.46 blue:0.58 alpha:1.0], //magenta
-                                   [SKColor colorWithRed:0.99 green:0.75 blue:0.52 alpha:1.0], //amarelinho
-                                   [SKColor colorWithRed:0.12 green:0.44 blue:0.64 alpha:1.0], //azul
-                                   [SKColor colorWithRed:0.54 green:0.71 blue:0.89 alpha:1.0]]; //cinza
+                NSArray *cores = @[[SKColor colorWithRed:0.30 green:0.74 blue:0.83 alpha:1.0],
+                                   [SKColor colorWithRed:1.00 green:0.46 blue:0.58 alpha:1.0],
+                                   [SKColor colorWithRed:0.99 green:0.75 blue:0.52 alpha:1.0],
+                                   [SKColor colorWithRed:0.12 green:0.44 blue:0.64 alpha:1.0],
+                                   [SKColor colorWithRed:0.54 green:0.71 blue:0.89 alpha:1.0]];
                 
                 NSUInteger colorIndex = arc4random() % cores.count;
                 
@@ -94,7 +94,7 @@ typedef enum {
                 _Labelscore.fontSize = 20.0f;
                 _Labelscore.horizontalAlignmentMode = SKLabelHorizontalAlignmentModeLeft;
 
-                _Labelscore.position = CGPointMake(30, 10);
+                _Labelscore.position = CGPointMake(30, 20);
                 
                 [self.scene addChild:_Labelscore];
                 
@@ -105,7 +105,7 @@ typedef enum {
                 _LabelTempo.fontColor = [UIColor whiteColor];
                 _LabelTempo.fontSize = 20.0f;
                 _LabelTempo.horizontalAlignmentMode = SKLabelHorizontalAlignmentModeRight;
-                _LabelTempo.position = CGPointMake(350, 10);
+                _LabelTempo.position = CGPointMake(350, 20);
 
                 
                 //add a cena
@@ -296,7 +296,7 @@ typedef enum {
     UIImage *image = [UIImage imageNamed:@"alerta.png"];
     UIAlertView* alert = [[UIAlertView alloc] initWithTitle: @"FIm do Jogo!" message: message delegate:nil cancelButtonTitle:@"Reiniciar" otherButtonTitles:nil, nil];
     
-    UIImageView* ivMyImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, image.size.width, image.size.height)];
+    UIImageView* ivMyImageView = [[UIImageView alloc] initWithImage:image];
     [ivMyImageView setImage:image];
     
     [alert setValue: ivMyImageView forKey:@"accessoryView"];
