@@ -12,7 +12,7 @@
 #define colunas 6
 #define linhas 8
 #define minimo_blocos 2
-#define tempoJogo 40.0f
+#define tempoJogo 30.0f
 
 
 typedef enum {
@@ -91,7 +91,9 @@ typedef enum {
                 _Labelscore = [SKLabelNode labelNodeWithFontNamed: @"Arial"];
                 _LabelTempo.text = @"";
                 _Labelscore.fontColor = [UIColor whiteColor ];
-                _Labelscore.fontSize = 14.0f;
+                _Labelscore.fontSize = 20.0f;
+                _Labelscore.horizontalAlignmentMode = SKLabelHorizontalAlignmentModeLeft;
+
                 _Labelscore.position = CGPointMake(30, 10);
                 
                 [self.scene addChild:_Labelscore];
@@ -101,9 +103,9 @@ typedef enum {
                 _LabelTempo = [SKLabelNode labelNodeWithFontNamed:@"Arial"];
                 _LabelTempo.text = @"";
                 _LabelTempo.fontColor = [UIColor whiteColor];
-                _LabelTempo.fontSize = 14.0f;
+                _LabelTempo.fontSize = 20.0f;
                 _LabelTempo.horizontalAlignmentMode = SKLabelHorizontalAlignmentModeRight;
-                _LabelTempo.position = CGPointMake(310, 20);
+                _LabelTempo.position = CGPointMake(350, 10);
 
                 
                 //add a cena
@@ -138,18 +140,18 @@ typedef enum {
         // Procurar os blocos ao validos (mesmo )
         NSMutableArray *objectsToRemove = [self nodesToRemove:[NSMutableArray array] aroundNode:clickedBlock];
 
-        // ensure that there are enough connected blocks selected
+        // verifica o se os blocos conectados podem ser destruídos
         if(objectsToRemove.count >= minimo_blocos) {
             
           
             
-            // iterate through everything we need to delete
+            // deleta os blocos
             for(Blocos *deleteNode in objectsToRemove) {
                 
-                // remove it from the scene
+                // remover da cena
                 [deleteNode removeFromParent];
                 
-                // and decrement the 'row' variable for all blocks that sit above the one being removed
+                // desce os blocos acima do deletado
                 for(Blocos *testNode in [self getAllBlocks]) {
                     if(deleteNode.coluna == testNode.coluna && (deleteNode.linha < testNode.linha)) {
                         --testNode.linha;
@@ -157,19 +159,19 @@ typedef enum {
                     }
                 }
                 
+                //sempre q é deletado um bloco, aumenta a pontuacao
                 ++_score;
                 
                 _Labelscore.text = [NSString stringWithFormat:@ "Score: %d" , _score];
             }
 
             
-            // make sure our grid stays full even when blocks are removed by...
+            // prenche a coluna qnd blocos sao destruídos
             
-            // initialize an array of 'maximum indexes for each column'
+            // linhas máximas numa coluna
             NSUInteger totallinhas[colunas];
             for(int i=0; i<colunas; i++) totallinhas[i] = 0;
             
-            // walk through our blocks
             for(Blocos *node in [self getAllBlocks]) {
                 
                 // get the index of the highest row in each column
@@ -178,7 +180,7 @@ typedef enum {
                 }
             }
             
-            // walk through each column
+            // passa por cada coluna
             for (int coluna= 0; coluna < colunas; coluna++ ){
                 while (totallinhas [coluna] < linhas -1){
                     
@@ -193,7 +195,7 @@ typedef enum {
 
                     
                     NSUInteger colorIndex = arc4random() % _cores.count;
-                    // add the block to our scene
+                    // add os blocos na cena
                     
                     
                     Blocos *node = [[Blocos alloc] initWithLinha:totallinhas[coluna] + 1
@@ -202,7 +204,7 @@ typedef enum {
                                                              andSize:CGSizeMake(dimension, dimension)];
                     [self.scene addChild:node];
                     
-                    // increment the number of rows in this particular column
+                    // incrementa o numero de linhas na coluna
                     ++totallinhas[coluna];
                     
                 }
@@ -219,13 +221,13 @@ typedef enum {
 {
     NSMutableArray *blocks = [NSMutableArray array];
     
-    // iterate through all nodes
+    // passa por todos os nodes
     for(SKNode *childNode in self.scene.children) {
         
-        // see if it's of type 'BlockNode'
+        // verificar se é do tipo Bloco
         if([childNode isKindOfClass:[Blocos class]]) {
             
-            // add it to our tracking array
+            // add no array
             [blocks addObject:childNode];
         }
     }
@@ -239,23 +241,23 @@ typedef enum {
     BOOL isRow = (baseNode.linha == testNode.linha);
     BOOL isCol = (baseNode.coluna == testNode.coluna);
     
-    // if the nodes are one row/column apart
+    // se os blocos estao separados por uma coluna/linha
     BOOL oneOffCol = (baseNode.coluna+1 == testNode.coluna || baseNode.coluna-1 == testNode.coluna);
     BOOL oneOffRow = (baseNode.linha+1 == testNode.linha || baseNode.linha-1 == testNode.linha);
     
-    // if the nodes are the same color
+    // se eles sao da mesma cor
     BOOL sameColor = [baseNode.color isEqual:testNode.color];
     
-    // returns true when they are next to each other AND the same color
+    // se eles estao perto E  sao da mesma cor = true
     return ( (isRow && oneOffCol) || (isCol && oneOffRow) ) && sameColor;
 }
 
 - (NSMutableArray*) nodesToRemove:(NSMutableArray*)removedNodes aroundNode:(Blocos*)baseNode
 {
-    // make sure our base node is being removed
+    // remover o bloco base
     [removedNodes addObject:baseNode];
     
-    // go through all the blocks on the screen
+    // passar por todos os blocos
     for(Blocos *childNode in [self getAllBlocks]) {
         
         // if the node being tested is on one of the four sides off our base node
@@ -277,21 +279,29 @@ typedef enum {
 
 -(void)gameEnded{
     
-    // indicate our game state as stopped
+    //Jogo parado
     _gameState = STOPPED;
     
-    // create a message to let the user know their score
     NSString *message = [NSString stringWithFormat:@"Aeee! Você fez %d pontos", _score];
     
-    // show the message to the user
-    UIAlertView *av = [[UIAlertView alloc] initWithTitle:@"Boom!"
-                                                 message:message
-                                                delegate:nil
-                                       cancelButtonTitle:@"Ok"
-                                       otherButtonTitles:nil];
-    [av show];
+    // mensagem de fim de jogo
+//    UIAlertView *av = [[UIAlertView alloc] initWithTitle:@"Boom!"
+//                                                 message:message
+//                                                delegate:nil
+//                                       cancelButtonTitle:@"Ok"
+//                                       otherButtonTitles:nil];
+//    [av show];
     
-    // reset the score tracker for the next game
+    
+    UIImage *image = [UIImage imageNamed:@"alerta.png"];
+    UIAlertView* alert = [[UIAlertView alloc] initWithTitle: @"FIm do Jogo!" message: message delegate:nil cancelButtonTitle:@"Reiniciar" otherButtonTitles:nil, nil];
+    
+    UIImageView* ivMyImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, image.size.width, image.size.height)];
+    [ivMyImageView setImage:image];
+    
+    [alert setValue: ivMyImageView forKey:@"accessoryView"];
+    [alert show];
+    // reset da pontuacao
     _score = 0;
 
     
@@ -315,10 +325,10 @@ typedef enum {
             [self gameEnded];
         }
     }
-    // go through all the blocks in our scene
+    // passa por todos os blocos da cena
     for(SKNode *node in self.scene.children) {
         
-        // and normalize the position so it falls exactly on a pixel
+        //posiciona os blocos corretamente
         node.position = CGPointMake(roundf(node.position.x), roundf(node.position.y));
     }
 }
