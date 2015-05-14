@@ -7,12 +7,13 @@
 //
 
 #import "GameScene.h"
+#import "GameMenuScene.h"
 #import "Blocos.h"
 
 #define colunas 6
 #define linhas 8
 #define minimo_blocos 2
-#define tempoJogo 05.0f
+#define tempoJogo 40.0f
 
 
 typedef enum {
@@ -147,10 +148,12 @@ typedef enum {
             
             // deleta os blocos
             for(Blocos *deleteNode in objectsToRemove) {
-                
+                [self runAction:[SKAction playSoundFileNamed:@"Drag.caf" waitForCompletion:NO]];
+
                 // remover da cena
                 [deleteNode removeFromParent];
                 
+                                
                 // desce os blocos acima do deletado
                 for(Blocos *testNode in [self getAllBlocks]) {
                     if(deleteNode.coluna == testNode.coluna && (deleteNode.linha < testNode.linha)) {
